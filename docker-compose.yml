@@ -1,0 +1,36 @@
+version: '3'
+
+services:
+  api:
+    build:
+      context: ./api  # Telling docker to use ../intro-to-docker/api
+      dockerfile: Dockerfile.api
+    container_name: api # Docker-compose will define the container name if we don't
+    ports:
+      - 8000:8000 
+    environment:
+      - DEBUG=true  # Change this value to false to disable the /debug endpoint
+    networks:
+      - default
+    volumes:
+      - ./data:/data # We are mapping ../intro-to-docker/data to the container's /data directory
+  
+  server:
+    build:
+      context: ./server
+      dockerfile: Dockerfile.server
+    container_name: server
+    environment: 
+      - DEBUG=false
+    ports:
+      - 8001:8001
+    networks:
+      - default # Using the same network as the api
+    depends_on:
+      - api # We are telling docker-compose to wait until the api service is started before starting this one
+
+networks:
+  default:
+
+volumes:
+  api:

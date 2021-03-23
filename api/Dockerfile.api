@@ -1,0 +1,20 @@
+# We are using the image 'node' version '12' from docker hub as our base
+# Each line is essentially a new image
+FROM node:12
+
+RUN mkdir -p /app
+# WORKDIR is similar to running 'cd' on a unix terminal
+WORKDIR /app
+
+COPY package.json .
+RUN npm install
+# We need to copy our local files to the docker container
+COPY . .
+
+# EXPOSE is ONLY FOR DOCUMENTATION
+# it doesn't do anything to let you use a specific port
+# it is defined so readers know what ports are being used
+EXPOSE 8000
+
+# CMD is the list of commands run when starting the docker container
+CMD ["npm", "start"]
